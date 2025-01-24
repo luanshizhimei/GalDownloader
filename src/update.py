@@ -1,5 +1,6 @@
 import os
 import re
+import time
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -55,20 +56,20 @@ def validate_url(url, pattern):
         return False
 
 
+def _click_button(chrome: Chrome, by: str, selector: str) -> None:
+    chrome.click_element_js(WebDriverWait(chrome, 10, 2).until(EC.presence_of_element_located((by, selector))))
+
+
 def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
     chrome.get(dl_info["link"])
     log.info(f"尝试解析网页：{dl_info['title']}")
     log.info(f"当前网页url：{chrome.current_url}")
 
-    selector = ".inn-singular__post__toolbar__item__link:nth-child(2) > .poi-icon__text"
-    ele = WebDriverWait(chrome, 10, 2).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, selector))
-    )
+    log.info("点击点赞按钮")
+    _click_button(chrome, By.CSS_SELECTOR, ".inn-singular__post__toolbar__item__link:nth-child(1) > .poi-icon__text")
 
-    if ele.text.strip() != "下载":
-        raise RuntimeError("未找到下载按钮")
-    log.info(f"点击下载按钮")
-    chrome.execute_script("arguments[0].click();", ele)
+    log.info("点击下载按钮")
+    _click_button(chrome, By.CSS_SELECTOR, ".inn-singular__post__toolbar__item__link:nth-child(2) > .poi-icon__text")
 
     # 判断是否有弹出额度用尽弹出
     if chrome.is_visual_element(By.CSS_SELECTOR, ".poi-alert__msg"):
