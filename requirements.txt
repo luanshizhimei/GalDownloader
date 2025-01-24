@@ -1,0 +1,10 @@
+aria2p==0.12.1
+beautifulsoup4==4.12.3
+ddddocr==1.5.6
+fake_useragent==2.0.3
+Requests==2.32.3
+schedule==1.2.2
+selenium==4.28.1
+undetected_edgedriver==3.1.6.4
+urllib3==2.3.0
+webdriver_manager==4.0.2
