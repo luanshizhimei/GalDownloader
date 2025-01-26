@@ -21,7 +21,7 @@ def check_in():
         )
         for ele in eles:
             title = ele.text.strip()
-            if title == "免费抽奖（每日）" or title == "每周礼物":
+            if title == "免费抽奖（每日）" or title == "每周礼物" or title == "【限时】假期积分礼包":
                 ele.click()
                 chrome.click_element(By.CSS_SELECTOR, ".poi-btn", js_enable=True)
                 chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")

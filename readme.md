@@ -6,7 +6,10 @@
 2. 自动下载收藏夹内游戏，若积分不足则退出，实现类似订阅的功能。
 
 
-## 零、环境要求
+
+----
+
+## 一、环境要求
 
 
 | 工作环境 | 版本 |
@@ -17,7 +20,7 @@
 
 
 
-## 一、安装方法
+## 二、安装方法
 
 - 第一步：修改配置文件`config\user.ini.default`内容并将配置文件名称改为`user.ini`
 ```ini
@@ -38,11 +41,13 @@ python -m venv .\venv\
 - 第四步： 安装依赖
 <details>  
 <summary>【可选】升级pip</summary>  
+
 ```bash   
 python -m ensurepip --upgrade   
 python -m pip install --upgrade setuptools   
 python -m pip install --upgrade pip  
 ```
+
 </details>  
 
 ```bash
@@ -58,7 +63,7 @@ _refresh_cookies.bat
 _run.bat
 ```
 
-## 二、脚本使用说明
+## 三、脚本使用说明
 
 1. 启动脚本程序
 ```bash
@@ -72,9 +77,12 @@ _run_hidden.vbs
  ```bash
 _refresh_cookies.bat
 ```
+4. 终止脚本程序
+ ```bash
+_shutdown.ps1
+```
 
-
-## 三、配置文件说明
+## 四、配置文件说明
 
 
 - `config\app.ini`：程序配置文件

@@ -1,1 +1,1 @@
-call CreateObject("WScript.Shell").Run("cmd /c _start_app.bat", 0, True)
+call CreateObject("WScript.Shell").Run("cmd /c _run.bat", 0, True)

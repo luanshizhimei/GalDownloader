@@ -34,7 +34,7 @@ def _process_dl_path(dl: dict, game_info: dict, extract_pwd: str):
 
     # 创建密码文件夹
     pwd_folder = os.path.join(root_path, f"解压密码：{extract_pwd}")
-    if len(extract_pwd) > 0:
+    if len(extract_pwd) > 0 and extract_pwd is not None:
         os.makedirs(pwd_folder, exist_ok=True)
 
     sub_path = dl["path"][1:]
@@ -108,6 +108,7 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
                                               ".inn-download-page__content__item__download-pwd input").get_attribute(
         'value')
 
+    result["extract_pwd"] = ""
     try:
         result["extract_pwd"] = ele.find_element(By.CSS_SELECTOR,
                                                  ".inn-download-page__content__item__extract-pwd input").get_attribute(
