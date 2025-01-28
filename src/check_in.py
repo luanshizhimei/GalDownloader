@@ -6,13 +6,19 @@ from chrome import Chrome
 from logger import log
 from sct import sct
 
+drawgame_match_list = [
+    "免费抽奖（每日）",
+    "每周礼物",
+    "【限时】假期积分礼包"
+]
 
 def check_in():
     with Chrome() as chrome:
         chrome.get("https://www.zfsya.com/")
         log.info("执行每日签到：第一步 点击每日签到")
         if chrome.is_visual_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily"):
-            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily")
+            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
+            log.info("点击成功")
 
         log.info("执行每日签到：第二步 点击每日和每周抽奖")
         chrome.get("https://www.zfsya.com/account/lottery")
@@ -21,10 +27,11 @@ def check_in():
         )
         for ele in eles:
             title = ele.text.strip()
-            if title == "免费抽奖（每日）" or title == "每周礼物" or title == "【限时】假期积分礼包":
+            if title in drawgame_match_list:
                 ele.click()
                 chrome.click_element(By.CSS_SELECTOR, ".poi-btn", js_enable=True)
                 chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
+                log.info("点击成功")
 
         ele = chrome.find_element(By.CSS_SELECTOR, ".inn-account__products__preface__item")
         points_str = ele.text
