@@ -17,7 +17,7 @@ def check_in():
         chrome.get("https://www.zfsya.com/")
         log.info("执行每日签到：第一步 点击每日签到")
         if chrome.is_visual_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily"):
-            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
+            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn", js_enable=True)
             log.info("点击成功")
 
         log.info("执行每日签到：第二步 点击每日和每周抽奖")
