@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from chrome import Chrome
 from logger import log
 from sct import sct
-import time
 
 drawgame_match_list = [
     "免费抽奖（每日）",
@@ -13,12 +12,17 @@ drawgame_match_list = [
     "【限时】假期积分礼包"
 ]
 
+
 def check_in():
     with Chrome() as chrome:
         chrome.get("https://www.zfsya.com/")
+        log.info("判断是否存在入站提示")
+        if chrome.is_visual_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn"):
+            chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
+            log.info("取消入站提示")
+
         log.info("执行每日签到：第一步 点击每日签到")
-        time.sleep(5)
-        if chrome.is_visual_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily"):
+        if chrome.is_visual_element(By.ID, "inn-nav__point-sign-daily"):
             chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
             log.info("点击成功")
 
