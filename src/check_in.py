@@ -37,7 +37,7 @@ def check_in():
                 ele.click()
                 chrome.click_element(By.CSS_SELECTOR, ".poi-btn", js_enable=True)
                 chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
-                log.info("点击成功")
+                log.info(f"点击成功：{title}")
 
         ele = chrome.find_element(By.CSS_SELECTOR, ".inn-account__products__preface__item")
         points_str = ele.text

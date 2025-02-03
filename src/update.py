@@ -1,6 +1,5 @@
 import os
 import re
-import time
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -144,6 +143,7 @@ def update():
         downloader = Downloader(server_url)
         success_count = 0
         fail_count = 0
+        send_text = ""
         for game_info in favorite.get_download_item():
             try:
                 # 提取网盘链接
@@ -161,6 +161,7 @@ def update():
                     dl_filepath = _process_dl_path(dl, game_info, netdisk["extract_pwd"])
                     downloader.download_wait([dl_url], dl_filepath)
                 success_count += 1
+                send_text += f"{game_info['title']}    \n"
             except Exception as err_msg:
                 err_text = f"游戏下载失败：{game_info['title']}，序号：{game_info['idx']}"
                 log.warning(err_text)
@@ -172,7 +173,7 @@ def update():
 
         downloader.close()
         favorite.close()
-        send_text = f"累计下载{success_count}个游戏，下载失败{fail_count}"
+        send_text = f"累计下载{success_count}个游戏，下载失败：{fail_count}    \n  \n" + send_text
         log.info(send_text)
         sct.send("宅方社更新", send_text)
         log.info("====== 结束更新下载操作 ======")
