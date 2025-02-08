@@ -95,7 +95,7 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
     ele = None
     for e in eles:
         title = e.find_element(By.CSS_SELECTOR, "legend").text.strip()
-        if title == "月上云":
+        if title.find("月上云") != -1 :
             ele = e
             break
 

@@ -1,3 +1,8 @@
+import datetime
+import os
+import time
+from pathlib import Path
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,18 +18,36 @@ drawgame_match_list = [
 ]
 
 
+def _screenshot(driver: Chrome, title: str) -> None:
+    screenshot_dir = os.path.join(Path.cwd(), r'\screenshot')
+    screenshot_name = f"{datetime.datetime.now().strftime('%y%m%d')}-{title}.png"
+    screenshot_path = os.path.join(screenshot_dir, screenshot_name)
+    log.info(f"执行截屏：{screenshot_path}")
+    if os.path.exists(screenshot_path):
+        os.remove(screenshot_path)
+    driver.save_screenshot(screenshot_path)
+
+
 def check_in():
     with Chrome() as chrome:
-        chrome.get("https://www.zfsya.com/")
+        for idx in range(5):
+            log.info(f"第{idx}次查询每日签收按钮是否存在")
+            chrome.get("https://www.zfsya.com/")
+            chrome.refresh()
+            if chrome.is_visual_element(By.ID, "inn-nav__point-sign-daily"):
+                log.info(" -> 检测成功，执行下一步")
+                break
+            log.warning(" -> 未找到")
+            time.sleep(10)
+
         log.info("判断是否存在入站提示")
         if chrome.is_visual_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn"):
             chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
             log.info("取消入站提示")
 
         log.info("执行每日签到：第一步 点击每日签到")
-        if chrome.is_visual_element(By.ID, "inn-nav__point-sign-daily"):
-            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
-            log.info("点击成功")
+        chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
+        log.info("点击成功")
 
         log.info("执行每日签到：第二步 点击每日和每周抽奖")
         chrome.get("https://www.zfsya.com/account/lottery")
