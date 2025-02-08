@@ -30,7 +30,7 @@ def _screenshot(driver: Chrome, title: str) -> None:
 
 def check_in():
     with Chrome() as chrome:
-        for idx in range(5):
+        for idx in range(1, 3):
             log.info(f"第{idx}次查询每日签收按钮是否存在")
             chrome.get("https://www.zfsya.com/")
             chrome.refresh()
@@ -45,9 +45,10 @@ def check_in():
             chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
             log.info("取消入站提示")
 
-        log.info("执行每日签到：第一步 点击每日签到")
-        chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
-        log.info("点击成功")
+        if chrome.is_visual_element(By.ID, "inn-nav__point-sign-daily"):
+            log.info("执行每日签到：第一步 点击每日签到")
+            chrome.click_element(By.CSS_SELECTOR, ".inn-nav__point-sign-daily__btn")
+            log.info("点击成功")
 
         log.info("执行每日签到：第二步 点击每日和每周抽奖")
         chrome.get("https://www.zfsya.com/account/lottery")

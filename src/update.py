@@ -1,5 +1,7 @@
 import os
 import re
+import sys
+import traceback
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -95,7 +97,7 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
     ele = None
     for e in eles:
         title = e.find_element(By.CSS_SELECTOR, "legend").text.strip()
-        if title.find("月上云") != -1 :
+        if title.find("月上云") != -1:
             ele = e
             break
 
@@ -164,8 +166,11 @@ def update():
                 send_text += f"{game_info['title']}    \n"
             except Exception as err_msg:
                 err_text = f"游戏下载失败：{game_info['title']}，序号：{game_info['idx']}"
-                log.warning(err_text)
-                log.warning(f"错误捕获：{err_msg}")
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                tb = traceback.extract_tb(exc_traceback)[-1]
+                log.warning(f"错误发生在文件: {tb.filename}，行号：{tb.lineno}，函数名：{tb.name}")
+                log.warning(f"错误代码行内容: {tb.line}")
+                log.warning(f"错误类型: {exc_type.__name__}，错误信息: {exc_value}")
                 err_log_append(err_text)
                 fail_count += 1
                 continue

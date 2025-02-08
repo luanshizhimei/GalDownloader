@@ -14,8 +14,15 @@ class Downloader:
         self._process = None
         if self._getVersion(server_url) is None:
             log.info("未检测外部aria2c，使用内部程序自启")
-            self._process = subprocess.Popen(args=(app["aria2c_path"], "--enable-rpc", "--rpc-listen-all"),
-                                             stdout=subprocess.DEVNULL)
+            self._process = subprocess.Popen(args=(
+                app["aria2c_path"],
+                "--enable-rpc",
+                "--rpc-listen-all",
+                "--max-connection-per-server=16",  # 与下载服务器的最大连接数（总共）
+                "--split=16",  # 下载一个文件使用连接数
+                "--min-split-size=1M"  # 文件分片大小
+                # doc：https://aria2.github.io/manual/en/html/aria2c.html
+            ), stdout=subprocess.DEVNULL)
         self._client = Client(host="http://localhost", port=6800, secret="")
         self._api = API(self._client)
 
@@ -41,7 +48,7 @@ class Downloader:
             if task.has_failed:
                 err_msg = f"下载失败，错误报告: {task.error_message}"
                 log.warning(err_msg)
-                raise err_msg
+                raise RuntimeError(err_msg)
             time.sleep(1)
         log.info(f"文件下载完成：{task.dir}")
         return task

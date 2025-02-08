@@ -9,13 +9,13 @@ import urllib3
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-#from selenium.webdriver.edge.options import Options as EdgeOptions
+# from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from undetected_edgedriver import EdgeOptions  # 屏蔽selenium特征
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 from logger import log
 

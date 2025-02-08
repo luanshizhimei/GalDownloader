@@ -1,6 +1,8 @@
 import functools
+import sys
 import threading
 import time
+import traceback
 
 import schedule
 
@@ -14,13 +16,16 @@ def catch_exceptions(job_func):
     @functools.wraps(job_func)
     def wrapper(*args, **kwargs):
         try:
-            log.info(f"====== 开始执行任务：{job_func.__name__} ======")
+            log.info(f"================== 开始执行任务：{job_func.__name__} ==================")
             result = job_func(*args, **kwargs)
-            log.info(f"====== 结束执行任务：{job_func.__name__} ======")
+            log.info(f"================== 结束执行任务：{job_func.__name__} ==================")
             return result
         except:
-            import traceback
-            log.warning(traceback.format_exc())
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            tb = traceback.extract_tb(exc_traceback)[-1]
+            log.warning(f"错误发生在文件: {tb.filename}，行号：{tb.lineno}，函数名：{tb.name}")
+            log.warning(f"错误代码行内容: {tb.line}")
+            log.warning(f"错误类型: {exc_type.__name__}，错误信息: {exc_value}")
             return schedule.CancelJob
 
     return wrapper

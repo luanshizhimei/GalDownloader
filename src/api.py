@@ -1,11 +1,12 @@
+import pathlib
 import time
 import urllib.parse
 
-import pathlib
 import requests
 import urllib3
 from requests.models import Response
 from requests.sessions import Session as BaseSession
+
 from logger import log
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
