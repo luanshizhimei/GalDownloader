@@ -33,7 +33,7 @@ class Favorite:
         self._open_webpage()
 
         dl_count = 0
-        log.info("====== 执行更新收藏夹数据库 ======")
+        log.info("====== （第一步）执行更新收藏夹数据库 ======")
         for item in self._update_favorit_item():
             if self._db.query_index(item["index"]):
                 continue

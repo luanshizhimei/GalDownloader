@@ -30,14 +30,14 @@ def _screenshot(driver: Chrome, title: str) -> None:
 
 def check_in():
     with Chrome() as chrome:
-        for idx in range(1, 3):
+        for idx in range(1, 4):
             log.info(f"第{idx}次查询每日签收按钮是否存在")
             chrome.get("https://www.zfsya.com/")
             chrome.refresh()
             if chrome.is_visual_element(By.ID, "inn-nav__point-sign-daily"):
-                log.info(" -> 检测成功，执行下一步")
+                log.info("-> 检测成功，执行下一步")
                 break
-            log.warning(" -> 未找到")
+            log.warning("-> 未找到")
             time.sleep(10)
 
         log.info("判断是否存在入站提示")

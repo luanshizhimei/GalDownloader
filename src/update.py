@@ -140,7 +140,7 @@ def update():
     with Chrome() as chrome:
         favorite = Favorite(chrome)
         favorite.refresh()
-        log.info("====== 执行更新下载操作 ======")
+        log.info("====== （第二步）执行更新下载操作 ======")
         server_url = r"http://localhost:6800/rpc"
         downloader = Downloader(server_url)
         success_count = 0
