@@ -1,4 +1,3 @@
-import inspect
 import json
 import os
 import time
@@ -9,13 +8,13 @@ import urllib3
 from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-# from selenium.webdriver.edge.options import Options as EdgeOptions
-from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from undetected_edgedriver import EdgeOptions  # 屏蔽selenium特征
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from undetected_chromedriver import ChromeOptions  # 屏蔽selenium特征，不小心造重复轮子
+# from selenium.webdriver.chrome.options import Options as ChromeOptions
+from webdriver_manager.chrome import ChromeDriverManager
 
 from logger import log
 
@@ -25,12 +24,10 @@ os.environ['WDM_SSL_VERIFY'] = '0'  # 禁用 SSL 验证
 
 class Driver(webdriver.Chrome):
 
-    def __init__(self, visual=False, user_agent=None):
-        self.options = EdgeOptions()
-        self.options.use_chromium = True  # 确保使用 Chromium 内核的 Edge
-        self.options.add_argument("--log-level=3")  # 设置日志级别以减少控制台输出
+    def __init__(self, visual=True, user_agent=None):
+        self.options = ChromeOptions()
         # 不显示浏览器以加快脚本运行
-        if visual is False:
+        if not visual:
             self.options.add_argument("--headless")  # 添加无头模式参数
             prefs = {}
             prefs["profile.managed_default_content_settings.images"] = 2  # 不加载图片
@@ -44,7 +41,7 @@ class Driver(webdriver.Chrome):
         self.user_agent = user_agent
         self.options.add_argument(f"user-agent={self.user_agent}")
 
-        self.service = EdgeService(executable_path=EdgeChromiumDriverManager().install(), log_output='NUL')
+        self.service = ChromeService(executable_path=ChromeDriverManager().install())
         super(Driver, self).__init__(service=self.service, options=self.options)
 
     def save_cookies(self, file_path: str) -> None:
@@ -86,14 +83,12 @@ class Driver(webdriver.Chrome):
             else:
                 element.click()
         except TimeoutException as err_msg:
-            frame = inspect.currentframe()
-            args, _, _, values = inspect.getargvalues(frame)
-            log.warning(f"未找该元素，错误信息：{err_msg}，传入参数：{values}")
+            log.warning(f"未找该元素，错误信息：{err_msg}")
 
     def click_element_js(self, element: WebElement) -> None:
         super(Driver, self).execute_script("arguments[0].click();", element)
 
-    def get_file(self, url: str, des_path: str) -> str or None:
+    def get_file(self, url: str, des_path: str) -> str:
         file_name = url[url.rfind(r"/") + 1:]
         mark = file_name.find(r"?")
         if mark != -1:
@@ -116,14 +111,16 @@ class Driver(webdriver.Chrome):
             try:
                 response = requests.get(url, cookies=session_cookies, headers=headers, verify=False)
                 response.raise_for_status()
-                with open(file_path, "wb") as f:
-                    f.write(response.content)
-                return file_path
             except requests.exceptions.HTTPError as e:
                 log.warning(f"文件下载失败，尝试重新下载次数：{try_count}，错误信息: {e}")
                 try_count += 1
                 time.sleep(3)
-                return None
+            else:
+                break
+
+        with open(file_path, "wb") as f:
+            f.write(response.content)
+        return file_path
 
     def is_visual_element(self, by_type: str, find_value: str) -> bool:
         try:
@@ -133,3 +130,11 @@ class Driver(webdriver.Chrome):
             return True
         except:
             return False
+
+    def wait_for_window(self, old_handles, check_timeout=3):
+        while True:
+            time.sleep(check_timeout)
+            wh_now = super(Driver, self).window_handles
+            wh_then = old_handles
+            if len(wh_now) > len(wh_then):
+                return set(wh_now).difference(set(wh_then)).pop()

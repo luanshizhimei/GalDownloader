@@ -80,8 +80,9 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
         if alert_msg == "用户组无权限或积分不足5（事项分类有详细积分说明）":
             log.info("积分已耗尽，退出本次任务")
             return None
-        log.info("点击弹出关闭按钮")
-        chrome.find_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn").click()
+        if chrome.is_visual_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn"):
+            log.info("点击弹出关闭按钮")
+            chrome.find_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn").click()
 
     log.info(f"下载网页url：{chrome.current_url}")
 

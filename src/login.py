@@ -57,6 +57,7 @@ def login():
     log.info("执行登入操作，请输入验证码！")
     _login_input(chrome, user["uid"], user["pwd"])
 
+    time.sleep(10)
     log.info("登入完成，保存cookies文件")
     chrome.save_cookies(cookies_path)
 

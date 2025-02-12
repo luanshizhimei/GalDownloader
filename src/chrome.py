@@ -20,6 +20,7 @@ class Chrome(Driver):
             log.error(send_text)
             sct.send(send_text)
             exit(9)
+        super(Chrome, self).maximize_window()
 
     def _load_cookie(self) -> None:
         self.get(r"https://www.zfsya.com/")
