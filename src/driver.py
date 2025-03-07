@@ -7,7 +7,9 @@ import requests
 import urllib3
 from fake_useragent import UserAgent
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (
+    TimeoutException, WebDriverException
+)
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -26,22 +28,27 @@ class Driver(webdriver.Chrome):
 
     def __init__(self, visual=True, user_agent=None):
         self.options = ChromeOptions()
+        self.options.add_argument("--disable-dev-shm-usage")
+        self.options.add_argument("--no-sandbox")
         # 不显示浏览器以加快脚本运行
         if not visual:
             self.options.add_argument("--headless")  # 添加无头模式参数
-            prefs = {}
-            prefs["profile.managed_default_content_settings.images"] = 2  # 不加载图片
-            prefs["permissions.default.stylesheet"] = 2  # 不加载css
+            prefs = {
+                "profile.managed_default_content_settings.images": 2,
+                "profile.managed_default_content_settings.stylesheets": 2
+            }
             self.options.add_experimental_option("prefs", prefs)
         self.visual = visual
 
         # 设置user-agent
-        if user_agent is None:
-            user_agent = UserAgent().chrome
-        self.user_agent = user_agent
+        self.user_agent = user_agent or UserAgent().chrome
         self.options.add_argument(f"user-agent={self.user_agent}")
 
-        self.service = ChromeService(executable_path=ChromeDriverManager().install())
+        try:
+            self.service = ChromeService(executable_path=ChromeDriverManager().install())
+        except WebDriverException as e:
+            raise RuntimeError("ChromeDriver 初始化失败") from e
+
         super(Driver, self).__init__(service=self.service, options=self.options)
 
     def save_cookies(self, file_path: str) -> None:

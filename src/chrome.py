@@ -7,6 +7,7 @@ from conf import app, app_conf
 from driver import Driver
 from logger import log
 from sct import sct
+import os
 
 
 class Chrome(Driver):
@@ -20,7 +21,6 @@ class Chrome(Driver):
             log.error(send_text)
             sct.send(send_text)
             exit(9)
-        super(Chrome, self).maximize_window()
 
     def _load_cookie(self) -> None:
         self.get(r"https://www.zfsya.com/")
@@ -41,4 +41,7 @@ class Chrome(Driver):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.quit()
+        log.info("关闭浏览器")
+        super(Chrome, self).quit()
+        os.system('taskkill /f /im chromedriver.exe')
+        os.system('taskkill /f /im chrome.exe')
