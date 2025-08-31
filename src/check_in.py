@@ -12,6 +12,7 @@ from sct import sct
 
 drawgame_match_list = [
     "免费抽奖（每日）",
+    "【限时】暑期积分礼包",
     "每周礼物"
 ]
 
@@ -48,7 +49,8 @@ def check_in():
         for ele in eles:
             title = ele.text.strip()
             if title in drawgame_match_list:
-                ele.click()
+                chrome.click_element_js(ele)
+                #ele.click()
                 chrome.click_element(By.CSS_SELECTOR, ".poi-btn", js_enable=True)
                 chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn")
                 log.info(f"点击成功：{title}")

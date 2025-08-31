@@ -14,8 +14,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from undetected_chromedriver import ChromeOptions  # 屏蔽selenium特征，不小心造重复轮子
-# from selenium.webdriver.chrome.options import Options as ChromeOptions
+#from undetected_chromedriver import ChromeOptions  # 屏蔽selenium特征，不小心造重复轮子
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
 from logger import log

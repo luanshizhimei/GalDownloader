@@ -54,6 +54,8 @@ if __name__ == "__main__":
     run_daemon_thread(job_update)
     schedule.run_all()  # 初次启动，全部执行
 
+    exit(9)
+
     while True:
         schedule.run_pending()
         time.sleep(1)

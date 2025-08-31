@@ -77,19 +77,19 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
         ele = chrome.find_element(By.CSS_SELECTOR, ".poi-alert__msg")
         alert_msg = ele.text.strip()
         log.warning(f"提示弹出信息：{alert_msg}")
-        if alert_msg == "用户组无权限或积分不足5（事项分类有详细积分说明）":
+        if alert_msg[:5] == "积分不足5":
             log.info("积分已耗尽，退出本次任务")
             return None
         if chrome.is_visual_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn"):
             log.info("点击弹出关闭按钮")
-            chrome.find_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn").click()
+            chrome.click_element(By.CSS_SELECTOR, ".poi-dialog__footer__btn", js_enable=True)
 
     log.info(f"下载网页url：{chrome.current_url}")
 
     # 校验是否进入下载页面中
     cur_url = chrome.current_url
-    if validate_url(cur_url, r"^https://www\.zfsya\.com/download#.+$") is False:
-        raise RuntimeError(f"未打开下载页面，url：{cur_url}")
+    # if validate_url(cur_url, r"^https://www\.zfsya\.com/download#.+$") is False:
+    #     raise RuntimeError(f"未打开下载页面，url：{cur_url}")
 
     # 提取解压密码和打开网页
     eles = WebDriverWait(chrome, 10, 2).until(

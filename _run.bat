@@ -1,17 +1,20 @@
 @echo off
-setlocal
 
-:: 执行执行脚本目录
-set "batchPath=%~dp0"
-:: 执行python环境目录
-set "PYTHON_ENV_PATH=%batchPath%\venv"
-:: 执行脚本目录
-set "PYTHON_SCRIPT_PATH=%batchPath%\src\app.py"
+SETLOCAL
 
-cd /d "%batchPath%"
+SET VENV_DIR=.venv
+SET BIN_DIR=.\bin
+SET PY_SCRIPT=.\src\app.py
+SET PY_OPTIONS=
 
-call "%PYTHON_ENV_PATH%\Scripts\activate.bat"
-python "%PYTHON_SCRIPT_PATH%"
+call "%VENV_DIR%\Scripts\activate.bat"
+if %errorlevel% neq 0 (
+    echo Error: Virtual environment activation failed
+    pause
+    exit /b 1
+)
 
-endlocal
-exit /b 0
+set "PATH=%BIN_DIR%;%PATH%"
+uv run "%PY_SCRIPT%" %PY_OPTIONS%
+
+ENDLOCAL

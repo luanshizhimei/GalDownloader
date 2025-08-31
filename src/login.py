@@ -1,32 +1,12 @@
-import base64
 import os
 import time
 
-import ddddocr
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from conf import app, user
 from driver import Driver
 from logger import log
-
-
-def verification_code(driver: webdriver) -> None:
-    # 自动识别验证码, 需要训练图库，后面有时间再搞。
-    img = driver.find_element(By.XPATH, '//img[@title="刷新验证码"]')
-    bstr = img.get_attribute("src")
-    bstr = bstr[bstr.rfind(",") + 1:]
-    imgdata = base64.b64decode(bstr)
-
-    ocr = ddddocr.DdddOcr(beta=True, show_ad=False)
-    result = ocr.classification(imgdata, png_fix=True)
-    log.info(f"验证码：{result}")
-
-    img_path = "check.png"
-    if os.path.exists(img_path):
-        os.remove(img_path)
-    with open(img_path, 'wb') as f:
-        f.write(imgdata)
 
 
 def _login_input(driver: webdriver, uid: str, pwd: str) -> None:
