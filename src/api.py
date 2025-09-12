@@ -84,7 +84,7 @@ class Api:
         return self._process("/", [])
 
 
-def create_cloud_api(selenium_cookies: dict, user_agent: str, referer_url: str) -> Api:
+def create_cloud_api(selenium_cookies: list[dict], user_agent: str, referer_url: str) -> Api:
     # 处理selenium cookies
     session_cookies = {}
     for cookie in selenium_cookies:

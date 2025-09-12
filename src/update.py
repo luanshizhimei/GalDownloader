@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import time
 import traceback
 
 from selenium.common.exceptions import NoSuchElementException
@@ -58,11 +59,15 @@ def validate_url(url, pattern):
 
 
 def _click_button(chrome: Chrome, by: str, selector: str) -> None:
-    chrome.click_element_js(WebDriverWait(chrome, 10, 2).until(EC.presence_of_element_located((by, selector))))
+    ele = WebDriverWait(chrome, 10, 2).until(EC.presence_of_element_located((by, selector)))
+    chrome.click_element_js(ele)
+    #print(f"点击按钮文本：{ele.text}")
 
 
 def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
     chrome.get(dl_info["link"])
+    chrome.execute_script("document.body.style.zoom='0.25'")
+    time.sleep(1)
     log.info(f"尝试解析网页：{dl_info['title']}")
     log.info(f"当前网页url：{chrome.current_url}")
 
@@ -87,7 +92,7 @@ def _process_webpage(chrome: Chrome, dl_info: dict) -> dict or None:
     log.info(f"下载网页url：{chrome.current_url}")
 
     # 校验是否进入下载页面中
-    cur_url = chrome.current_url
+    #cur_url = chrome.current_url
     # if validate_url(cur_url, r"^https://www\.zfsya\.com/download#.+$") is False:
     #     raise RuntimeError(f"未打开下载页面，url：{cur_url}")
 
@@ -149,6 +154,9 @@ def update():
         send_text = ""
         for game_info in favorite.get_download_item():
             try:
+                # 打个补丁
+                game_info["link"] = game_info["link"].replace("www.zfsya.com", "www.zfsya1.com")
+
                 # 提取网盘链接
                 netdisk = _process_webpage(chrome, game_info)
                 if netdisk is None:
@@ -165,7 +173,7 @@ def update():
                     downloader.download_wait([dl_url], dl_filepath)
                 success_count += 1
                 send_text += f"{game_info['title']}    \n"
-            except Exception as err_msg:
+            except Exception as _:
                 err_text = f"游戏下载失败：{game_info['title']}，序号：{game_info['idx']}"
                 exc_type, exc_value, exc_traceback = sys.exc_info()
                 tb = traceback.extract_tb(exc_traceback)[-1]

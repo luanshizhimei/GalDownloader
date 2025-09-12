@@ -30,6 +30,16 @@ class Driver(webdriver.Chrome):
         self.options = ChromeOptions()
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--no-sandbox")
+        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])  # 关闭控制台输出
+        self.options.add_argument('--log-level=3')  # 只显示致命错误
+        self.options.add_argument('--disable-dev-shm-usage')
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--disable-gpu')
+        self.options.add_argument('--disable-logging')  # 禁用日志
+        self.options.add_argument('--silent')  # 静默模式
+        self.options.add_argument('--disable-software-rasterizer')
+        self.options.add_argument('--disable-features=VoiceTranscription')  # 禁用语音转录
+        self.options.add_argument('--disable-background-timer-throttling')
         # 不显示浏览器以加快脚本运行
         if not visual:
             self.options.add_argument("--headless")  # 添加无头模式参数
