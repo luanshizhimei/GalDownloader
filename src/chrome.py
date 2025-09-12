@@ -23,7 +23,7 @@ class Chrome(Driver):
             exit(9)
 
     def _load_cookie(self) -> None:
-        self.get(r"https://www.zfsya.com/")
+        self.get(r"https://www.zfsya1.com/")
         self.load_cookies(app["cookies_path"])
         self.refresh()
 

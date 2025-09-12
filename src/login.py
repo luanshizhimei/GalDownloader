@@ -10,7 +10,7 @@ from logger import log
 
 
 def _login_input(driver: webdriver, uid: str, pwd: str) -> None:
-    sign_url = r"https://www.zfsya.com/sign"
+    sign_url = r"https://www.zfsya1.com/sign"
     driver.get(sign_url)
     try:
         driver.find_element(By.NAME, "email").send_keys(uid)
@@ -23,7 +23,7 @@ def _login_input(driver: webdriver, uid: str, pwd: str) -> None:
 
 def login():
     chrome = Driver(visual=True)
-    chrome.get(r"https://www.zfsya.com/")
+    chrome.get(r"https://www.zfsya1.com/")
 
     log.info("清除浏览器cookies")
     chrome.delete_all_cookies()

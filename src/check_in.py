@@ -42,7 +42,7 @@ def check_in():
             log.warning("-> 未找到按钮")
 
         log.info("执行每日签到：第二步 点击每日和每周抽奖")
-        chrome.get("https://www.zfsya.com/account/lottery")
+        chrome.get("https://www.zfsya1.com/account/lottery")
         eles = WebDriverWait(chrome, 3, 0.5).until(
             EC.visibility_of_all_elements_located((By.CSS_SELECTOR, ".inn-account__lottery__item__title"))
         )

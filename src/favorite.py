@@ -82,7 +82,7 @@ class Favorite:
             set_fav_uid(uid)
             return
 
-        url = f"https://www.zfsya.com/author/{uid}/fav"
+        url = f"https://www.zfsya1.com/author/{uid}/fav"
         self._driver.get(url)
 
     def _get_user_id(self):
@@ -108,7 +108,7 @@ class Favorite:
                 break
 
         url = driver.current_url
-        pattern = r'https://www\.zfsya\.com/author/(\d+)/fav'
+        pattern = r'https://www\.zfsya1\.com/author/(\d+)/fav'
         match = re.match(pattern, url)
         if match:
             return match.group(1)
